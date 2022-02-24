@@ -1,0 +1,5 @@
+Lexico
+java -jar jflex-full-1.7.0.jar lexico.jflex
+
+Sintactico
+java -jar java-cup-11b.jar -parser Analizador_sintactico -symbols Simbolos sintactico.cup

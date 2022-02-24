@@ -1,0 +1,70 @@
+package analizadores;
+import java_cup.runtime.Symbol;
+
+terminal id, coma, conj, cadena, llaveA, llaveC, rango, or, klenee, positiva, interrogacion, concat, dospuntos, puntoycoma, separador,flecha,ascii,corcheteA,corcheteC,parentesisA,parentesisC,comillaS,comillaC;
+
+non terminal INICIO,E,E_2, SENTENCIA, CONJUNTOS, EXPRESION, VALIDACION, ER, ER_2, VALOR, RCONJ, RCONJ_2, VCONJ;
+
+start with INICIO;
+
+INICIO::= llaveA E {:System.out.println("Fin de analisis de entrada");:}
+;
+
+E::= SENTENCIA E_2
+;
+
+E_2::= SENTENCIA E_2
+| llaveC
+;
+SENTENCIA::= CONJUNTOS
+| EXPRESION
+| VALIDACION
+| separador
+;
+
+CONJUNTOS::= conj dospuntos id flecha RCONJ
+;
+RCONJ::= VCONJ rango VCONJ puntoycoma
+| VCONJ coma RCONJ_2
+;
+RCONJ_2::= VCONJ coma RCONJ_2
+| VCONJ puntoycoma
+;
+VCONJ::=cadena
+| llaveA
+| llaveC
+| or
+| klenee
+| positiva
+| interrogacion
+| concat
+| dospuntos
+| ascii
+| corcheteA
+| corcheteC 
+| parentesisA 
+| parentesisC
+| comillaS
+| comillaC
+;
+
+EXPRESION::=id flecha ER
+;
+ER::= VALOR ER_2
+;
+ER_2::=VALOR ER_2
+| puntoycoma
+;
+VALOR::= id
+| cadena
+| or
+| klenee
+| llaveA
+| llaveC
+| concat
+| positiva
+| interrogacion
+;
+VALIDACION::= id dospuntos cadena puntoycoma
+;
+
