@@ -1,5 +1,47 @@
 package analizadores;
 import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+
+parser code
+{:
+    public static LinkedList<TError> errores = new LinkedList<TError>(); 
+    public static LinkedList<Token> tokens = new LinkedList<Token>();
+
+    //Metodo al que se llama automaticamente ante algun error sintactico
+    public void syntax_error(Symbol s)
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+      
+        System.out.println("!!!!!!! Error Sintactico Recuperado !!!!!!!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+
+        TError tmp = new TError("Sintactico",lexema,"Caracter no esperado",fila,columna);
+        errores.add(tmp);
+        
+    }
+
+    //Metodo al que se llama en el momento en que ya no es posible una recuperacion de errores
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!!!!!!! Error Sintactico, Panic Mode !!!!!!! ");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+        
+        TError tmp = new TError("Sintactico",lexema, "Caracter no esperado",fila,columna);
+        errores.add(tmp);
+     
+    }
+:}
+
 
 terminal id, coma, conj, cadena, llaveA, llaveC, rango, or, klenee, positiva, interrogacion, concat, dospuntos, puntoycoma, separador,flecha,ascii,corcheteA,corcheteC,parentesisA,parentesisC,comillaS,comillaC;
 
@@ -7,64 +49,226 @@ non terminal INICIO,E,E_2, SENTENCIA, CONJUNTOS, EXPRESION, VALIDACION, ER, ER_2
 
 start with INICIO;
 
-INICIO::= llaveA E {:System.out.println("Fin de analisis de entrada");:}
+INICIO::= llaveA:c E {: Token t1 = new Token("llaveA",String.valueOf(c),cright,cleft);
+                        tokens.add(t1);
+                        System.out.println("Fin de analisis de entrada");
+                     :}
 ;
 
 E::= SENTENCIA E_2
 ;
 
 E_2::= SENTENCIA E_2
-| llaveC
+| llaveC:c  {:
+                                                        Token t1 = new Token("llaveC",String.valueOf(c),cright,cleft);
+                                                        tokens.add(t1);
+                                                    :}
 ;
 SENTENCIA::= CONJUNTOS
 | EXPRESION
 | VALIDACION
-| separador
+| separador:c                                       {:
+                                                        Token t1 = new Token("separador",String.valueOf(c),cright,cleft);
+                                                        tokens.add(t1);
+                                                    :}
 ;
 
-CONJUNTOS::= conj dospuntos id flecha RCONJ
+CONJUNTOS::= conj:c dospuntos:d id:i flecha:f RCONJ {:
+                                                        Token t1 = new Token("conj",String.valueOf(c),cright,cleft);
+                                                        Token t2 = new Token("dospuntos",String.valueOf(d),dright,dleft);
+                                                        Token t3 = new Token("id",String.valueOf(i),iright,ileft);
+                                                        Token t4 = new Token("flecha",String.valueOf(f),fright,fleft);
+                                                        
+                                                        tokens.add(t1);
+                                                        tokens.add(t2);
+                                                        tokens.add(t3);
+                                                        tokens.add(t4);
+                                                    :}
 ;
-RCONJ::= VCONJ rango VCONJ puntoycoma
-| VCONJ coma RCONJ_2
+RCONJ::= VCONJ rango:r VCONJ puntoycoma:p           {:
+                                                        Token t1 = new Token("rango",String.valueOf(r),rright,cleft);
+                                                        Token t2 = new Token("puntoycoma",String.valueOf(p),pright,pleft);
+
+                                                        tokens.add(t1);
+                                                        tokens.add(t2);
+                                                    :}
+| VCONJ coma:c RCONJ_2                              {:
+                                                        Token t1 = new Token("coma",String.valueOf(c),cright,cleft);
+                                                        
+                                                        tokens.add(t1);
+                                                        
+                                                    :}
+| VCONJ puntoycoma:p                                {:
+                                                        Token t2 = new Token("puntoycoma",String.valueOf(p),pright,pleft);
+
+                                                        tokens.add(t2);
+                                                    :}
 ;
-RCONJ_2::= VCONJ coma RCONJ_2
-| VCONJ puntoycoma
-;
-VCONJ::=cadena
-| llaveA
-| llaveC
-| or
-| klenee
-| positiva
-| interrogacion
-| concat
-| dospuntos
-| ascii
-| corcheteA
-| corcheteC 
-| parentesisA 
-| parentesisC
-| comillaS
-| comillaC
+RCONJ_2::= VCONJ coma:c RCONJ_2                     {:
+                                                        Token t1 = new Token("coma",String.valueOf(c),cright,cleft);
+                                                        
+                                                        tokens.add(t1);
+                                                        
+                                                    :}
+| VCONJ puntoycoma:p                                {:
+                                                        Token t2 = new Token("puntoycoma",String.valueOf(p),pright,pleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+;VCONJ::=cadena:c                                   {:
+                                                        Token t2 = new Token("cadena",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| llaveA:c{:
+                                                        Token t2 = new Token("llaveA",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| llaveC:c{:
+                                                        Token t2 = new Token("llaveC",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| or:c{:
+                                                        Token t2 = new Token("or",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| klenee:c{:
+                                                        Token t2 = new Token("klenee",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| positiva:c{:
+                                                        Token t2 = new Token("positiva",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| interrogacion:c{:
+                                                        Token t2 = new Token("interrogacion",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| concat:c{:
+                                                        Token t2 = new Token("concat",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| dospuntos:c{:
+                                                        Token t2 = new Token("dospuntos",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| ascii:c{:
+                                                        Token t2 = new Token("ascii",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| corcheteA:c{:
+                                                        Token t2 = new Token("corcheteA",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| corcheteC:c {:
+                                                        Token t2 = new Token("corcheteC",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| parentesisA:c {:
+                                                        Token t2 = new Token("parentesisA",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| parentesisC:c                                     {:
+                                                        Token t2 = new Token("parentesisC",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| comillaS:c                                        {:
+                                                        Token t2 = new Token("comillaS",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| comillaC:c                                        {:
+                                                        Token t2 = new Token("comillaC",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+
 ;
 
-EXPRESION::=id flecha ER
+EXPRESION::=id:i flecha:f ER                        {:
+                                                        Token t1 = new Token("id",String.valueOf(i),iright,ileft);
+                                                        Token t2 = new Token("flecha",String.valueOf(f),fright,fleft);
+                                                        tokens.add(t1);
+                                                        tokens.add(t2);
+                                                    :}
 ;
 ER::= VALOR ER_2
 ;
 ER_2::=VALOR ER_2
-| puntoycoma
+| puntoycoma:c                                      {:
+                                                        Token t2 = new Token("puntoycoma",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
 ;
-VALOR::= id
-| cadena
-| or
-| klenee
-| llaveA
-| llaveC
-| concat
-| positiva
-| interrogacion
+VALOR::= id:c{:
+                                                        Token t2 = new Token("id",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| cadena:c{:
+                                                        Token t2 = new Token("cadena",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| or:c{:
+                                                        Token t2 = new Token("or",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| klenee:c{:
+                                                        Token t2 = new Token("klenee",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| llaveA:c{:
+                                                        Token t2 = new Token("llaveA",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| llaveC:c{:
+                                                        Token t2 = new Token("llaveC",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| concat:c{:
+                                                        Token t2 = new Token("concat",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| positiva:C{:
+                                                        Token t2 = new Token("positiva",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
+| interrogacion:C{:
+                                                        Token t2 = new Token("interrogacion",String.valueOf(c),cright,cleft);
+
+                                                        tokens.add(t2);
+                                                    :}
 ;
-VALIDACION::= id dospuntos cadena puntoycoma
+VALIDACION::= id:i dospuntos:d cadena:c puntoycoma:p {:
+                                                        Token t1 = new Token("id",String.valueOf(i),iright,ileft);
+                                                        Token t2 = new Token("dospuntos",String.valueOf(d),dright,dleft);
+                                                        Token t3 = new Token("cadena",String.valueOf(c),cright,cleft);
+                                                        Token t4 = new Token("puntoycoma",String.valueOf(p),pright,pleft);
+                                                        tokens.add(t1);
+                                                        tokens.add(t2);
+                                                        tokens.add(t3);
+                                                        tokens.add(t4);
+                                                     :}
 ;
 

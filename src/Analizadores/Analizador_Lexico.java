@@ -2,6 +2,7 @@
 
 package analizadores;
 import java_cup.runtime.*;
+import java.util.LinkedList;
 
 
 /**
@@ -34,15 +35,15 @@ public class Analizador_Lexico implements java_cup.runtime.Scanner {
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = {
-     0,  0,  0,  0,  0,  0,  0,  0,  0, 30,  6, 31, 30, 30,  0,  0, 
+     0,  0,  0,  0,  0,  0,  0,  0,  0, 31,  3, 32, 31, 31,  0,  0, 
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 
-    30,  3,  5,  9,  9,  8,  9,  7, 16, 17, 20, 21, 11, 10, 23,  9, 
-     1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 24, 25,  2,  9,  4, 22, 
-     9,  1,  1, 26,  1,  1,  1,  1,  1,  1, 29,  1,  1,  1, 28, 27, 
-     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 14,  9, 15,  9,  9, 
-     9,  1,  1, 26,  1,  1,  1,  1,  1,  1, 29,  1,  1,  1, 28, 27, 
-     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 12, 19, 13, 18,  0, 
-     0,  0,  0,  0,  0, 31,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 
+    31,  5,  7, 10, 10,  9, 10,  8, 17, 18, 21, 22, 12, 11, 24,  2, 
+     1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 25, 26,  4, 10,  6, 23, 
+    10,  1,  1, 27,  1,  1,  1,  1,  1,  1, 30,  1,  1,  1, 29, 28, 
+     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 15, 10, 16, 10, 10, 
+    10,  1,  1, 27,  1,  1,  1,  1,  1,  1, 30,  1,  1,  1, 29, 28, 
+     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 13, 20, 14, 19,  0, 
+     0,  0,  0,  0,  0, 32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 
@@ -58,14 +59,14 @@ public class Analizador_Lexico implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\3\2\1\3\1\4\1\5\2\2\1\6"+
-    "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16"+
-    "\1\17\1\20\1\21\1\22\1\23\1\24\1\2\1\25"+
-    "\2\0\1\26\1\0\1\27\1\30\1\25\1\0\1\25"+
-    "\1\31\1\32";
+    "\1\0\1\1\2\2\1\3\2\2\1\4\1\5\2\2"+
+    "\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15"+
+    "\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\2"+
+    "\1\25\1\26\2\0\1\27\1\0\1\30\1\31\1\25"+
+    "\1\0\1\25\1\32\1\33";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[38];
+    int [] result = new int[40];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -90,14 +91,14 @@ public class Analizador_Lexico implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\40\0\100\0\140\0\40\0\200\0\40\0\240"+
-    "\0\300\0\340\0\40\0\40\0\40\0\40\0\40\0\40"+
-    "\0\40\0\40\0\40\0\40\0\40\0\40\0\40\0\40"+
-    "\0\40\0\u0100\0\100\0\u0120\0\200\0\40\0\240\0\300"+
-    "\0\40\0\u0140\0\u0160\0\u0180\0\40\0\100";
+    "\0\0\0\41\0\102\0\143\0\41\0\204\0\41\0\245"+
+    "\0\306\0\347\0\u0108\0\41\0\41\0\41\0\41\0\41"+
+    "\0\41\0\41\0\41\0\41\0\41\0\41\0\41\0\41"+
+    "\0\41\0\41\0\u0129\0\102\0\u014a\0\u016b\0\245\0\41"+
+    "\0\306\0\347\0\41\0\u018c\0\u01ad\0\u01ce\0\41\0\102";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[38];
+    int [] result = new int[40];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -120,18 +121,19 @@ public class Analizador_Lexico implements java_cup.runtime.Scanner {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\2\1\3\1\4\2\5\1\6\1\7\1\10\1\11"+
-    "\1\5\1\12\1\13\1\14\1\15\1\16\1\17\1\20"+
+    "\1\2\1\3\1\4\1\5\1\6\2\7\1\10\1\11"+
+    "\1\12\1\7\1\13\1\14\1\15\1\16\1\17\1\20"+
     "\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30"+
-    "\1\31\1\32\3\3\1\7\42\0\1\33\30\0\4\33"+
-    "\5\0\1\34\34\0\5\35\1\36\1\0\31\35\6\37"+
-    "\1\0\1\36\30\37\10\0\1\40\33\0\1\41\34\0"+
-    "\1\33\30\0\1\33\1\42\2\33\2\0\3\34\1\43"+
-    "\1\0\33\34\1\0\1\33\30\0\2\33\1\44\1\33"+
-    "\6\0\1\45\34\0\1\33\30\0\3\33\1\46\2\0";
+    "\1\31\1\32\1\33\3\3\1\5\43\0\1\34\31\0"+
+    "\4\34\4\0\1\35\43\0\1\36\33\0\3\37\1\0"+
+    "\3\37\1\40\31\37\3\41\1\0\4\41\1\40\30\41"+
+    "\11\0\1\42\35\0\1\43\33\0\1\34\31\0\1\34"+
+    "\1\44\2\34\2\0\3\35\1\0\35\35\5\36\1\45"+
+    "\1\0\32\36\1\0\1\34\31\0\2\34\1\46\1\34"+
+    "\10\0\1\47\33\0\1\34\31\0\3\34\1\50\2\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[416];
+    int [] result = new int[495];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -169,12 +171,12 @@ public class Analizador_Lexico implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\1\11\2\1\1\11\1\1\1\11\3\1\17\11"+
-    "\2\1\2\0\1\11\1\0\1\1\1\11\1\1\1\0"+
+    "\1\0\1\11\2\1\1\11\1\1\1\11\4\1\17\11"+
+    "\3\1\2\0\1\11\1\0\1\1\1\11\1\1\1\0"+
     "\1\1\1\11\1\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[38];
+    int [] result = new int[40];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -248,6 +250,9 @@ public class Analizador_Lexico implements java_cup.runtime.Scanner {
    * otherwise, it will have a value of 0.
    */
   private int zzFinalHighSurrogate = 0;
+
+  /* user code: */
+    public static LinkedList<TError> errores = new LinkedList<TError>(); 
 
 
   /**
@@ -619,158 +624,165 @@ public class Analizador_Lexico implements java_cup.runtime.Scanner {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
             { System.out.println("Error Lexico : "+yytext()+
-                    "Linea"+yyline+" Columna "+yycolumn);
+                    "Linea: "+yyline+" Columna: "+yycolumn);
+                    TError tmp= new TError("Lexico", yytext(),"Caracter no encontrado", yyline, yycolumn );
+                    errores.add(tmp);
             } 
             // fall through
-          case 27: break;
+          case 28: break;
           case 2: 
             { System.out.println("Reconocio token:<ascii> lexema:"+yytext());
                     return new Symbol(Simbolos.ascii, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 28: break;
-          case 3: 
-            { System.out.println("Reconocio token:<comillaC> lexema:"+yytext());
-                    return new Symbol(Simbolos.comillaC, yycolumn, yyline, yytext());
-            } 
-            // fall through
           case 29: break;
-          case 4: 
+          case 3: 
             { /* Espacios en blanco, se ignoran */
             } 
             // fall through
           case 30: break;
+          case 4: 
+            { System.out.println("Reconocio token:<comillaC> lexema:"+yytext());
+                    return new Symbol(Simbolos.comillaC, yycolumn, yyline, yytext());
+            } 
+            // fall through
+          case 31: break;
           case 5: 
             { System.out.println("Reconocio token:<comillaS> lexema:"+yytext());
                     return new Symbol(Simbolos.comillaS, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 31: break;
+          case 32: break;
           case 6: 
             { System.out.println("Reconocio token:<coma> lexema:"+yytext());
                     return new Symbol(Simbolos.coma, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 32: break;
+          case 33: break;
           case 7: 
             { System.out.println("Reconocio token:<llaveA> lexema:"+yytext());
                     return new Symbol(Simbolos.llaveA, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 33: break;
+          case 34: break;
           case 8: 
             { System.out.println("Reconocio token:<llaveC> lexema:"+yytext());
                     return new Symbol(Simbolos.llaveC, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 34: break;
+          case 35: break;
           case 9: 
             { System.out.println("Reconocio token:<corcheteA> lexema:"+yytext());
                     return new Symbol(Simbolos.corcheteA, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 35: break;
+          case 36: break;
           case 10: 
             { System.out.println("Reconocio token:<corcheteC> lexema:"+yytext());
                     return new Symbol(Simbolos.corcheteC, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 36: break;
+          case 37: break;
           case 11: 
             { System.out.println("Reconocio token:<parentesisA> lexema:"+yytext());
                     return new Symbol(Simbolos.parentesisA, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 37: break;
+          case 38: break;
           case 12: 
             { System.out.println("Reconocio token:<parentesisC> lexema:"+yytext());
                     return new Symbol(Simbolos.parentesisC, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 38: break;
+          case 39: break;
           case 13: 
             { System.out.println("Reconocio token:<rango> lexema:"+yytext());
                     return new Symbol(Simbolos.rango, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 39: break;
+          case 40: break;
           case 14: 
             { System.out.println("Reconocio token:<or> lexema:"+yytext());
                     return new Symbol(Simbolos.or, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 40: break;
+          case 41: break;
           case 15: 
             { System.out.println("Reconocio token:<klenee> lexema:"+yytext());
                     return new Symbol(Simbolos.klenee, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 41: break;
+          case 42: break;
           case 16: 
             { System.out.println("Reconocio token:<positiva> lexema:"+yytext());
                     return new Symbol(Simbolos.positiva, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 42: break;
+          case 43: break;
           case 17: 
             { System.out.println("Reconocio token:<interrogacion> lexema:"+yytext());
                     return new Symbol(Simbolos.interrogacion, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 43: break;
+          case 44: break;
           case 18: 
             { System.out.println("Reconocio token:<concat> lexema:"+yytext());
                     return new Symbol(Simbolos.concat, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 44: break;
+          case 45: break;
           case 19: 
             { System.out.println("Reconocio token:<dospuntos> lexema:"+yytext());
                     return new Symbol(Simbolos.dospuntos, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 45: break;
+          case 46: break;
           case 20: 
             { System.out.println("Reconocio token:<puntoycoma> lexema:"+yytext());
                     return new Symbol(Simbolos.puntoycoma, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 46: break;
+          case 47: break;
           case 21: 
             { System.out.println("Reconocio token:<id> lexema:"+yytext());
                     return new Symbol(Simbolos.id, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 47: break;
+          case 48: break;
           case 22: 
+            { System.out.println("Comentario de una linea");
+            } 
+            // fall through
+          case 49: break;
+          case 23: 
             { System.out.println("Reconocio token:<cadena> lexema:"+yytext());
                     return new Symbol(Simbolos.cadena, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 48: break;
-          case 23: 
+          case 50: break;
+          case 24: 
             { System.out.println("Reconocio token:<separador> lexema:"+yytext());
                     return new Symbol(Simbolos.separador, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 49: break;
-          case 24: 
+          case 51: break;
+          case 25: 
             { System.out.println("Reconocio token:<flecha> lexema:"+yytext());
                     return new Symbol(Simbolos.flecha, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 50: break;
-          case 25: 
+          case 52: break;
+          case 26: 
             { System.out.println("Comentario multilinea");
             } 
             // fall through
-          case 51: break;
-          case 26: 
+          case 53: break;
+          case 27: 
             { System.out.println("Reconocio token:<conj> lexema:"+yytext());
                     return new Symbol(Simbolos.conj, yycolumn, yyline, yytext());
             } 
             // fall through
-          case 52: break;
+          case 54: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

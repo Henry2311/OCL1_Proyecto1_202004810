@@ -1,11 +1,6 @@
 
 package olc1.proyecto1_202004810;
 
-import analizadores.Analizador_Lexico;
-import analizadores.Analizador_sintactico;
-import java.io.BufferedReader;
-import java.io.FileReader;
-
 public class OLC1Proyecto1_202004810 {
 
     public static void main(String[] args) {
@@ -14,14 +9,7 @@ public class OLC1Proyecto1_202004810 {
             public void run() {
                 new app().setVisible(true);
             }
-        });
-            //String cadena = "Compiladores,Henry,Rocio,Me,Quiero,Morir,Odio,aqui";
-            Analizador_Lexico lexico = new Analizador_Lexico(
-                                        new BufferedReader(new FileReader("D:\\Henry\\USAC\\5to semestre\\Compi1\\analizar.txt")));
-            Analizador_sintactico sintactico = new Analizador_sintactico(lexico);
-            sintactico.parse();
-            
-           
+        });    
        }catch(Exception e){
         
             e.printStackTrace();
@@ -29,7 +17,14 @@ public class OLC1Proyecto1_202004810 {
         }
         
 }
-
+/*Pattern pat = Pattern.compile(listaNombreER.get(i).getER());
+                            Matcher mat = pat.matcher(listaEntradaER.get(j).getEntrada());
+                            if (mat.matches()) {
+                                //System.out.println("SI");
+                                //System.out.println(listaEntradaER.get(j).getNombre());
+                                listaEntradaER.get(j).setBuena_Mala("buena");
+                            } else {
+                                //S*/
 //cadena = ([\"][^\n\"]* [\"]) | ([\'][^\n\']* [\'])
 //comentario = "<!"[^"!>"]* "!>"
 //" \/' "

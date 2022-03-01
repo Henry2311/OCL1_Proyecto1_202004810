@@ -1,17 +1,29 @@
 
 package olc1.proyecto1_202004810;
 
+import analizadores.Analizador_Lexico;
+import analizadores.Analizador_sintactico;
+import analizadores.Token;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.LinkedList;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class app extends javax.swing.JFrame {
 
+    
+    
     static String file="";
             File archivo = null;
             FileReader fr;
             BufferedReader br;
+            String ruta="";
+            LinkedList<conjuntos> conj = new LinkedList<>();
+            LinkedList<expresion> er = new LinkedList<>();
+            LinkedList<validacion> val = new LinkedList<>();
+            
     public app() {
         initComponents();
     }
@@ -36,6 +48,7 @@ public class app extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -134,6 +147,15 @@ public class app extends javax.swing.JFrame {
 
         jMenu1.setText("Opciones");
         jMenu1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+
+        jMenuItem5.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jMenuItem5.setText("Nuevo");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
 
         jMenuItem1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jMenuItem1.setText("Abrir");
@@ -237,7 +259,7 @@ public class app extends javax.swing.JFrame {
             JFileChooser fc = new JFileChooser();
             int op = fc.showOpenDialog(this);
             if (op == JFileChooser.APPROVE_OPTION) {
-                
+                ruta=fc.getSelectedFile().getAbsolutePath();
                 archivo = fc.getSelectedFile();
             }
             
@@ -272,7 +294,113 @@ public class app extends javax.swing.JFrame {
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
         // TODO add your handling code here:
+        String contenido = this.jTextArea2.getText();
+        if("".equals(contenido)){
+            JOptionPane.showMessageDialog(this, "No hay Contenido para analizar");
+        }else{
+            try{
+                if("".equals(ruta)){
+                    JOptionPane.showMessageDialog(this, "Guarde el archivo");
+                }else{
+                    Analizador_Lexico lexico = new Analizador_Lexico(
+                                        new BufferedReader(new FileReader(ruta)));
+                    Analizador_sintactico sintactico = new Analizador_sintactico(lexico);
+                    sintactico.parse();
+                    Datos(sintactico);
+                }
+            }catch(Exception e){   
+                e.printStackTrace();
+            }
+            
+        } 
     }//GEN-LAST:event_button1ActionPerformed
+
+    public void Datos(Analizador_sintactico syntax){
+    
+        Token prueba [] = new Token[syntax.tokens.size()];
+        int k=0;
+        for (Token t : syntax.tokens) {
+            System.out.println(t.show());
+            prueba[k] = t;
+            k++;
+        }
+            
+            
+        Token aux;
+        for (int i = 0; i < prueba.length-1; i++) {
+            for (int j = 0; j < prueba.length-1; j++) {
+                if(prueba[j].getLinea()>prueba[j+1].getLinea()){
+                    aux=prueba[j];
+                    prueba[j]=prueba[j+1];
+                    prueba[j+1]=aux;
+                 
+                }
+            }
+        }
+        
+        for (int i = 0; i < prueba.length-1; i++) {
+            for (int j = 0; j < prueba.length-1; j++) {
+                if(prueba[j].getColumna()>prueba[j+1].getColumna() && prueba[j].getLinea()==prueba[j+1].getLinea()){
+                    aux=prueba[j];
+                    prueba[j]=prueba[j+1];
+                    prueba[j+1]=aux;
+                }
+            }
+        }
+            
+        int j = 0;
+        while(j<prueba.length){
+            if("conj".equals(prueba[j].getTipo())){
+                int emp = j+2;
+                int r = emp+2;
+                String rango = "";
+                for (int i = r; i < prueba.length; i++) {
+                    if("puntoycoma".equals(prueba[i].getTipo())){j=i;break;}
+                    else{
+                        rango+=prueba[i].getLexema();
+                        }
+                }
+                conjuntos nuevo = new conjuntos(prueba[emp].getLexema(),rango);
+                conj.add(nuevo);
+            }else if("id".equals(prueba[j].getTipo()) && "flecha".equals(prueba[j+1].getTipo())){
+                int exp = j+2;
+                String rango="";
+                for (int i = exp; i < prueba.length; i++) {
+                    if("puntoycoma".equals(prueba[i].getTipo())){j=i;break;}
+                    else{
+                        rango+=prueba[i].getLexema()+',';
+                        }
+                }
+                rango=rango.replaceAll("\\{,","{");
+                rango=rango.replaceAll(",}","}");
+                String range[];
+                range = rango.split(",");
+                expresion nuevo = new expresion(prueba[exp-2].getLexema(),range);
+                er.add(nuevo);
+            }else if("id".equals(prueba[j].getTipo()) && "dospuntos".equals(prueba[j+1].getTipo())){
+                validacion nuevo = new validacion(prueba[j].getLexema(),prueba[j+2].getLexema());
+                val.add(nuevo);
+            }
+            j++;
+        }
+            
+        for (conjuntos t : conj) {
+            System.out.println(t.info());
+        }
+        for (expresion t : er) {
+            System.out.println(t.info());
+        }
+        for (validacion t : val) {
+            System.out.println(t.info());
+        }
+        
+        
+        
+    }
+    
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -289,6 +417,7 @@ public class app extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

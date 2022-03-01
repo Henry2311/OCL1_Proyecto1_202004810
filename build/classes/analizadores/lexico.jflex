@@ -1,7 +1,11 @@
 package analizadores;
 import java_cup.runtime.*;
+import java.util.LinkedList;
 
 %%
+%{
+    public static LinkedList<TError> errores = new LinkedList<TError>(); 
+%}
 
 %public
 %class Analizador_Lexico
@@ -16,6 +20,7 @@ import java_cup.runtime.*;
 
 letra = [a-zA-Z0-9] 
 id = {letra}+
+linea = "//"+[^\n]*
 comentario = "<!"[^"!>"]* "!>"
 cadena = ([\"][^\n\"]* [\"]) | ([\'][^\n\']* [\'])
 separador = [%%]+
@@ -117,10 +122,13 @@ ascci = ([a-zA-Z_0-9] | [0-9] | "!" | "#" | "$" | "%" | "&" | "-" | "/" | "<" | 
                     return new Symbol(Simbolos.comillaC, yycolumn, yyline, yytext());
                  }
 [ \t\r\n\f]      { /* Espacios en blanco, se ignoran */ }
+{linea}     { System.out.println("Comentario de una linea"); }
 {comentario}     { System.out.println("Comentario multilinea"); }
 .               
                 {
                     System.out.println("Error Lexico : "+yytext()+
-                    "Linea"+yyline+" Columna "+yycolumn);
+                    "Linea: "+yyline+" Columna: "+yycolumn);
+                    TError tmp= new TError("Lexico", yytext(),"Caracter no encontrado", yyline, yycolumn );
+                    errores.add(tmp);  
                 }
 
