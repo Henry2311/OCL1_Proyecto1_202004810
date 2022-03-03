@@ -52,37 +52,56 @@ public class expresion {
             int primero=1;
             for (int i = 0; i < aux.length; i++) {
                 if(!Operador(aux[i])){
-                    Hoja h = new Hoja("F",String.valueOf(primero),String.valueOf(primero),aux[i]);
+                    Hoja h = new Hoja("F",String.valueOf(primero),String.valueOf(primero),aux[i],i,String.valueOf(primero));
                     hojas[i]=h;
                     primero++;
                 }else{
                     if("*".equals(aux[i]) | "?".equals(aux[i])){
-                        Hoja h = new Hoja("V","","",aux[i]);
+                        Hoja h = new Hoja("V","","",aux[i],i,"");
                         hojas[i]=h;
                     }else{
-                        Hoja h = new Hoja("","","",aux[i]);
+                        Hoja h = new Hoja("","","",aux[i],i,"");
                         hojas[i]=h;
                     }
                 }
             }
             Arbol arb = new Arbol(hojas,aux);
-            arb.Anulable();
+            Hoja nodos_arb[] = arb.setTree();
         reporte1 = new FileWriter("Arbol"+nombre+".dot");
         pw = new PrintWriter(reporte1);
         
         pw.println("digraph G {");
         pw.println("node[shape=\"oval\" style =filled]");
+        pw.println("nodesep=2;");
         
         String nodos[]=new String[aux.length];
         int contador=1;
         for (int j = 0; j < aux.length; j++) {  
-            pw.println("node"+contador+"[label=\""+aux[j].replaceAll("\"", "")+"\"]");
+            pw.println("node"+contador+"[fixedsize=true; label=<\n" +
+                            "  <TABLE CELLSPACING=\"2\" CELLPADDING=\"15\" BORDER=\"0\" CELLBORDER=\"0\">\n" +
+                                "  <TR>\n" +
+                                "    <TD ></TD>\n" +
+                                "    <TD >"+nodos_arb[j].getAnulable()+"</TD>\n" +
+                                "    <TD ></TD>\n" +
+                                "  </TR>\n" +
+                                "  <TR>\n" +
+                                "    <TD >"+nodos_arb[j].getPrimero()+"</TD>\n" +
+                                "    <TD > "+nodos_arb[j].getValor().replaceAll("\"", "")+" </TD>\n" +
+                                "    <TD >"+nodos_arb[j].getSiguientes()+"</TD>\n" +
+                                "  </TR>\n" +
+                                "  <TR>\n" +
+                                "    <TD ></TD>\n" +
+                                "    <TD >"+nodos_arb[j].getVh()+"</TD>\n" +
+                                "    <TD ></TD>\n" +
+                                "  </TR>\n" +
+                                "  </TABLE>\n" +
+                                "  >]");
             nodos[j]="node"+contador;
             contador++;
         }
         pw.println("node"+(contador+1)+"[label=\"#\"]");
         pw.println("node"+(contador+2)+"[label=\".\"]");
-        
+        arb.Siguientes(primero-1,nombre);
         int i=0;
         while(aux.length>1){
             while(i<aux.length){
@@ -113,7 +132,7 @@ public class expresion {
         pw.println("node"+(contador+2)+"->"+nodos[0]);
         pw.println("node"+(contador+2)+"->node"+(contador+1));
         
-        pw.println("label = \"Método del Arbol "+aux[0].replaceAll("\"", "")+"\";");
+        pw.println("label = \"\\n\\n\\nMétodo del Arbol "+aux[0].replaceAll("\"", "")+"\";");
         pw.println("}");
         
         }catch(Exception e){
@@ -132,8 +151,7 @@ public class expresion {
         }
     
     }
-    
-    
+     
     public static String[] removeElement( String[] arr, int index ){
         List<String> tempList = new ArrayList<>(Arrays.asList(arr));
         tempList.remove(index);

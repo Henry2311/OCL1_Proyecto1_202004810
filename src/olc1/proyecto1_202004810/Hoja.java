@@ -3,13 +3,32 @@ package olc1.proyecto1_202004810;
 
 public class Hoja {
 
-    private String anulable,primero,siguientes,valor;
+    private String anulable,primero,siguientes,valor,vh;
+    private int id;
 
-    public Hoja(String anulable, String primero, String siguientes, String valor) {
+    public Hoja(String anulable, String primero, String siguientes, String valor, int id,String vh) {
         this.anulable = anulable;
         this.primero = primero;
         this.siguientes = siguientes;
         this.valor = valor;
+        this.id = id;
+        this.vh = vh;
+    }
+
+    public String getVh() {
+        return vh;
+    }
+
+    public void setVh(String vh) {
+        this.vh = vh;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getAnulable() {
