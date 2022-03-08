@@ -1,2 +1,0 @@
-analizadores.Analizador_sintactico$CUP$Analizador_sintactico$actions
-analizadores.Analizador_sintactico

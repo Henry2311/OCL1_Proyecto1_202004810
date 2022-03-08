@@ -17,16 +17,4 @@ public class OLC1Proyecto1_202004810 {
         }
         
 }
-/*Pattern pat = Pattern.compile(listaNombreER.get(i).getER());
-                            Matcher mat = pat.matcher(listaEntradaER.get(j).getEntrada());
-                            if (mat.matches()) {
-                                //System.out.println("SI");
-                                //System.out.println(listaEntradaER.get(j).getNombre());
-                                listaEntradaER.get(j).setBuena_Mala("buena");
-                            } else {
-                                //S*/
-//cadena = ([\"][^\n\"]* [\"]) | ([\'][^\n\']* [\'])
-//comentario = "<!"[^"!>"]* "!>"
-//" \/' "
-//"\/" "
 }

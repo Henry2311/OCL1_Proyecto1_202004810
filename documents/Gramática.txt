@@ -1,0 +1,44 @@
+
+INICIO -> llaveA INSTRUCCION
+
+INSTRUCCION -> SENTENCIA INSTRUCCION_2
+
+INSTRUCCION_2 -> SENTENCIA INSTRUCCION_2
+ 		| llaveC (epsilon)
+
+SENTENCIA -> CONJUNTOS
+	     | EXPRESION
+	     | VALIDACION
+             | separador (epsilon)
+
+CONJUNTOS -> conj dospuntos id flecha RANGO_CONJUNTOS
+
+RANGO_CONJUNTOS -> VALOR_CONJUNTOS rango VALOR_CONJUNTOS puntoycoma
+		   | VALOR_CONJUNTOS coma RANGO_CONJUNTOS_2
+		   | VALOR puntoycoma
+
+RANGO_CONJUNTOS_2 -> VALOR_CONJUNTOS coma RANGO_CONJUNTOS_2
+		     | VALOR_CONJUNTOS puntoycoma (epsilon)
+
+VALOR_CONJUNTOS -> cadena 
+		  | operador 
+		  | especial 
+		  | letra 
+		  | numero
+		  | ascii
+
+EXPRESION -> id flecha ER
+
+ER -> VALOR_ER ER_2
+
+ER_2 -> VALOR_ER ER_2
+  	| puntoycoma (epsilon)
+
+VALOR_ER-> cadena 
+	| operador 
+	| especial 
+	| letra 
+	| numero
+	| ascii
+
+VALIDACION -> id dospuntos cadena puntoycoma

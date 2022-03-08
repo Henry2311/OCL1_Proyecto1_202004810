@@ -18,10 +18,11 @@ import java.util.LinkedList;
 %line
 %unicode
 
-letra = [a-zA-Z0-9] 
+letra = [a-zA-Z0-9_] 
 id = {letra}+
 linea = "//"+[^\n]*
 comentario = "<!"[^"!>"]* "!>"
+cespecial = [\"][\\][\",n,t,\'][\"]
 cadena = ([\"][^\n\"]* [\"]) | ([\'][^\n\']* [\'])
 separador = [%%]+
 
@@ -108,6 +109,10 @@ ascci = ([a-zA-Z_0-9] | [0-9] | "!" | "#" | "$" | "%" | "&" | "-" | "/" | "<" | 
 <YYINITIAL> {id} {
                     System.out.println("Reconocio token:<id> lexema:"+yytext());
                     return new Symbol(Simbolos.id, yycolumn, yyline, yytext());
+                 }
+<YYINITIAL> {cespecial} {
+                    System.out.println("Reconocio token:<cadena> lexema:"+yytext());
+                    return new Symbol(Simbolos.cadena, yycolumn, yyline, yytext());
                  }
 <YYINITIAL> {cadena} {
                     System.out.println("Reconocio token:<cadena> lexema:"+yytext());

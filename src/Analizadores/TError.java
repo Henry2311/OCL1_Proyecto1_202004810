@@ -24,5 +24,18 @@ public class TError {
         return data;
     }
     
+    public String html(){
+    
+        String rows="";
+        
+        rows+="<td  style=\"color: red; font-size: 1.2rem;\">"+tipo+"</td>\n";
+        rows+="<td  style=\"color: red; font-size: 1.2rem;\">"+lexema+"</td>\n";
+        rows+="<td  style=\"color: red; font-size: 1.2rem;\">"+descripcion+"</td>\n";
+        rows+="<td  style=\"color: red; font-size: 1.2rem;\">"+String.valueOf(linea)+"</td>\n";
+        rows+="<td  style=\"color: red; font-size: 1.2rem;\">"+String.valueOf(columna)+"</td>\n";
+    
+        return rows;
+    }
+    
    
 }

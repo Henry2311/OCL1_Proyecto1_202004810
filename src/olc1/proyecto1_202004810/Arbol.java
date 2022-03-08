@@ -5,7 +5,9 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Arbol {
     
@@ -180,7 +182,6 @@ public class Arbol {
             if(".,".equals(Lnodos[j].getValor()) || "|,".equals(Lnodos[j].getValor()) || "+,".equals(Lnodos[j].getValor()) || "?,".equals(Lnodos[j].getValor()) || "*,".equals(Lnodos[j].getValor())){
                Lnodos[j].setValor(Lnodos[j].getValor().replaceAll(",",""));
             }
-            System.out.println("NODO: "+Lnodos[j].getValor()+" ANULABILIDAD: "+Lnodos[j].getAnulable()+" PRIMEROS: "+Lnodos[j].getPrimero()+" ULTIMOS: "+Lnodos[j].getSiguientes());
         }
         
         hojas=Lnodos;
@@ -233,9 +234,7 @@ public class Arbol {
                                 for (int k = 0; k < ult.length; k++) {
                                     for (int l = 0; l < temp_s.length; l++) {
                                         String x = ult[k].replaceAll(" ", "");
-                                        System.out.println(ult[k]+", "+temp_s[l].getHoja());
                                         if(x.equals(temp_s[l].getHoja())){
-                                            System.out.println("AL ID: "+temp_s[l].getHoja()+" AÑADI: "+Arrays.toString(s));
                                             String nuevo[]=join(temp_s[l].getSiguientes(), s);
                                             temp_s[l].setSiguientes(nuevo);
                                         }
@@ -257,9 +256,7 @@ public class Arbol {
                                 for (int k = 0; k < ult.length; k++) {
                                     for (int l = 0; l < temp_s.length; l++) {
                                         String x = ult[k].replaceAll(" ", "");
-                                        System.out.println(ult[k]+temp_s[l].getHoja());
                                         if(x.equals(temp_s[l].getHoja())){
-                                            System.out.println("AL ID: "+temp_s[l].getHoja()+" AÑADI: "+Arrays.toString(s));
                                             String nuevo[]=join(temp_s[l].getSiguientes(), s);
                                             temp_s[l].setSiguientes(nuevo);
                                         }
@@ -277,14 +274,23 @@ public class Arbol {
             i=0;
         }
         
-        for (int j = 0; j < temp_s.length; j++) {
-            System.out.println("HOJA: "+temp_s[j].getHoja()+" SIGUIENTES: "+Arrays.toString(temp_s[j].getSiguientes()));
-        }
+        String ult[]=siguientes[0].getSiguientes().split(",");
+            String s[]={String.valueOf(c+1)};
+            for (int k = 0; k < ult.length; k++) {
+                for (int l = 0; l < temp_s.length; l++) {
+                    String x = ult[k].replaceAll(" ", "");
+                    if(x.equals(temp_s[l].getHoja())){
+                        String nuevo[]=join(temp_s[l].getSiguientes(), s);
+                        temp_s[l].setSiguientes(nuevo);
+                    }
+                }
+            } 
+        
         FileWriter reporte1 = null;
         PrintWriter pw = null;
         try{
             
-        reporte1 = new FileWriter("Transiciones"+nombre+".dot");
+        reporte1 = new FileWriter("SIGUIENTES_202004810\\Siguientes"+nombre+".dot");
         pw = new PrintWriter(reporte1);
         
         pw.println("digraph G {");
@@ -313,12 +319,22 @@ public class Arbol {
                 graphviz+="</TR>";
             }
             
+            
+            
+                graphviz+="<TR>";
+                graphviz+="<TD >#</TD>";
+                graphviz+="<TD >"+(c+1)+"</TD>";
+                graphviz+="<TD > -- </TD>";
+                graphviz+="</TR>";
+            
         graphviz+="</TABLE>>]";
         
         pw.println(graphviz);
         
-        pw.println("label = \"Tabla de Transiciones de "+nombre+"\";");
+        pw.println("label = \"Tabla de Siguientes de "+nombre+"\";");
         pw.println("}");
+        
+        Transiciones(temp_s,nombre);
         
         }catch(Exception e){
             e.printStackTrace();
@@ -326,7 +342,7 @@ public class Arbol {
             try{       
                 if(null != reporte1){
                     reporte1.close();
-                    ProcessBuilder buil = new ProcessBuilder("dot","-Tpng","-o","Transiciones"+nombre+".png","Transiciones"+nombre+".dot");
+                    ProcessBuilder buil = new ProcessBuilder("dot","-Tpng","-o","SIGUIENTES_202004810\\Siguientes"+nombre+".png","SIGUIENTES_202004810\\Siguientes"+nombre+".dot");
                     buil.redirectErrorStream(true);
                     buil.start();           
                 }
@@ -350,6 +366,216 @@ public class Arbol {
             indice++;
         }
         return j;
+    }
+    
+    public static void Transiciones(Siguientes[] sig, String nombre){
+    
+        List<Transiciones> trans = new ArrayList<>();
+        String t[]=hojas[0].getPrimero().split(",");
+        String term = "";
+        for (int i = 0; i < t.length; i++) {
+            for (int j = 0; j < hojas.length; j++) {
+                if(t[i].equals(hojas[j].getVh())){
+                    term+=hojas[j].getValor()+",";
+                }
+            }
+        }
+        Transiciones S0 = new Transiciones("S0",t,term.split(","));
+        trans.add(S0);
+        
+        for (int i = 0; i < sig.length; i++) {
+            String temp[]=sig[i].getSiguientes();
+            String terminales = "";
+            for (int j = 0; j < temp.length; j++) {
+                for (int k = 0; k < hojas.length; k++) {
+                    String x = temp[j].replaceAll(" ", "");
+                    if(x.equals(hojas[k].getVh()) && !"".equals(x) && !" ".equals(x)){
+                        terminales+=hojas[k].getValor()+",";
+                    }
+                }
+            }
+            Transiciones S = new Transiciones("S"+(i+1),temp,terminales.split(","));
+            trans.add(S);
+        }
+        trans=duplicado(trans);
+        
+        int state = 0;
+        for (Transiciones tran : trans) {
+            tran.setEstado("S"+state);
+            state++;
+        }
+        
+        FileWriter reporte1 = null;
+        PrintWriter pw = null;
+        FileWriter AFD = null;
+        PrintWriter pw_afd = null;
+        try{
+            
+        reporte1 = new FileWriter("TRANSICIONES_202004810\\Transiciones"+nombre+".dot");
+        pw = new PrintWriter(reporte1);
+      
+        pw.println("digraph G {");
+        pw.println("node[shape=\"box\"]");
+        String graphviz = "a1[label=<";
+        graphviz+=" <TABLE>\n" +
+                        "<TR>\n" +
+                        "<TD >ESTADOS</TD>\n" +
+                        "   <TD>TERMINALES</TD>\n"+ 
+                        "</TR>\n";
+        
+            List<String> terminales = new ArrayList<>(); 
+            List<String> vh = new ArrayList<>();
+            for (int i = 0; i < hojas.length; i++) {
+                if(!"".equals(hojas[i].getVh())){
+                    vh.add(hojas[i].getValor());
+                    terminales.add(hojas[i].getVh());
+                }
+            }
+            Set<String> hashset = new HashSet<>(vh);
+            vh.clear();
+            vh.addAll(hashset);
+            
+            String matrix [][] = new String[trans.size()+1][vh.size()+1];
+            matrix[0][0]="<TD></TD>";
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j = 0; j < matrix[i].length; j++) {
+                   if(j==0 && !"<TD></TD>".equals(matrix[i][j])){
+                       matrix[i][j]=trans.get(i-1).getEstado();
+                   }else if(i==0 && !"<TD></TD>".equals(matrix[i][j])){
+                       matrix[i][j]=vh.get(j-1);
+                   }else{
+                       matrix[i][j]="--";
+                   }
+                }
+            }
+            for (int i = 1; i < matrix.length; i++) {
+                if (matrix[i][0].equals(trans.get(i-1).getEstado())) {
+                    String movs [] = trans.get(i-1).getMovimiento();
+                    for (int j = 0; j < movs.length; j++) {
+                        for (int k = 0; k < hojas.length; k++) {
+                            String x = movs[j].replaceAll(" ", "");
+                            if (x.equals(hojas[k].getVh())) {
+                                String colum = hojas[k].getValor();
+                                for (int l = 1; l < matrix[0].length; l++) {
+                                    if(colum.equals(matrix[0][l])){
+                                        int max = Integer.parseInt(hojas[k].getVh());
+                                        if(max>=trans.size()){
+                                            matrix[i][l]="S"+String.valueOf(trans.size()-1);
+                                        }else{
+                                            matrix[i][l]="S"+hojas[k].getVh();
+                                        } 
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            for (int i = 0; i < matrix.length; i++) {
+                graphviz+="<TR>";
+                for (int j = 0; j < matrix[i].length; j++) {
+                    graphviz+="<TD>"+matrix[i][j]+"</TD>";
+                }
+                graphviz+="</TR>";
+            }
+    
+            
+        graphviz+="</TABLE>>]";
+        
+        pw.println(graphviz);
+        
+        pw.println("label = \"Tabla de Transiciones de "+nombre+"\";");
+        pw.println("}");
+        
+        AFD = new FileWriter("AFD_202004810\\AFD"+nombre+".dot");
+        pw_afd = new PrintWriter(AFD);
+        
+        pw_afd.println("digraph G {");
+        pw_afd.println("rankdir=\"LR\"\n" +
+                        "nodesep = 0.5\n" +
+                        "node [shape = \"circle\"] ");
+        
+        pw_afd.println(matrix[matrix.length-1][0]+"[shape = \"doublecircle\"]");
+        
+        String automata = "";
+            for (int i = 1; i < matrix.length; i++) {
+                for (int j = 1; j < matrix[i].length; j++) {
+                    if(!"--".equals(matrix[i][j])){
+                        String label;
+                        if("\"\\\"\"".equals(matrix[0][j])){
+                            label = "\\\"";
+                        }else{ 
+                            label = matrix[0][j].replaceAll("\"", "");
+                        }
+                        automata+=matrix[i][0]+" -> "+matrix[i][j]+"[label=\""+label+"\"]\n";
+                    }
+                }
+            }
+        
+            pw_afd.println(automata);
+            pw_afd.println("label = \"AFD de "+nombre+"\";");
+            pw_afd.println("}");
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{       
+                if(null != reporte1){
+                    reporte1.close();
+                    ProcessBuilder buil = new ProcessBuilder("dot","-Tpng","-o","TRANSICIONES_202004810\\Transiciones"+nombre+".png","TRANSICIONES_202004810\\Transiciones"+nombre+".dot");
+                    buil.redirectErrorStream(true);
+                    buil.start();   
+                    AFD.close();
+                    ProcessBuilder build = new ProcessBuilder("dot","-Tpng","-o","AFD_202004810\\AFD"+nombre+".png","AFD_202004810\\AFD"+nombre+".dot");
+                    build.redirectErrorStream(true);
+                    build.start(); 
+                }
+        }catch(Exception e2){
+        e2.printStackTrace();
+        }
+        }
+    }
+    
+    public static List duplicado(List<Transiciones> t){
+        Transiciones temporal [] = new Transiciones[t.size()];
+        for (int i = 0; i < temporal.length; i++) {
+            temporal[i]=t.get(i);
+        }
+        
+        int i=0;
+        while(i<temporal.length-1){
+            String actual []= temporal[i].getTerminal();
+            String siguiente []= temporal[i+1].getTerminal();
+            String ac="",sig="";
+            for (int j = 0; j < actual.length; j++) {
+                ac+=actual[j];
+            }
+            for (int j = 0; j < siguiente.length; j++) {
+                sig+=siguiente[j];
+            }
+            String nactu []= temporal[i].getMovimiento();
+            String nsig []= temporal[i+1].getMovimiento();
+            String nac="",nsigu="";
+            for (int j = 0; j < nactu.length; j++) {
+                nac+=nactu[j];
+            }
+            for (int j = 0; j < nsig.length; j++) {
+                nsigu+=nsig[j];
+            }
+            if(ac.equals(sig) && nac.equals(nsigu)){
+                temporal=removeDuplicado(temporal,i+1);
+                i=0;
+            }
+            i++;
+        }
+        List<Transiciones> temp = new ArrayList<>(Arrays.asList(temporal));
+        return temp;
+    }
+    
+    public static Transiciones[] removeDuplicado( Transiciones[] arr, int index ){
+        List<Transiciones> tempList = new ArrayList<>(Arrays.asList(arr));
+        tempList.remove(index);
+        return tempList.toArray(new Transiciones[0]);
     }
     
     public Hoja[] getHojas() {
